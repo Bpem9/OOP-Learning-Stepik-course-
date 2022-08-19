@@ -24,5 +24,6 @@ class InputValues:
 @InputValues(render=RenderDigit())
 def input_dg():
     return input('Введи числа через пробел: ')
+
 res = input_dg()
 print(res)
