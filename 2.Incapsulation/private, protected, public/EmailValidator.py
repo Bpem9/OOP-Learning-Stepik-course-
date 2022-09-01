@@ -1,22 +1,30 @@
-import string
-import random
+from random import choice
 import re
 
+class EmailValidator:
+    __CHARS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789._"
+    # def __new__(cls, *args, **kwargs):
+    #     None
+    def __init__(self):
+        # self.email = email
+        pass
 
-def matching(string):
-    pattern2 = r'\w+'
-    pattern = r'([\w.@]+)@(gmail.com)$'
-    if re.fullmatch(pattern, string):
-        print('Совпадает')
-    else:
-        print('Облом')
+    @staticmethod
+    def __is_email_str(email):
+        return isinstance(email, str)
+    @classmethod
+    def get_random_email(cls):
+        return ''.join([choice(cls.__CHARS) for _ in range(10)]) + '@gmail.com'
+    @classmethod
+    def check_email(cls, email):
+        if cls.__is_email_str(email):
+            name = re.search(r'([a-zA-Z0-9._]+)(?=@)', email).group(0)
+            domen = re.search(r'(?<=@)[a-zA-Z._]+', email).group(0)
+            if len(domen) <= 50 and len(name) <= 100:
+                if '.' in domen and not '..' in email:
+                    return True
+            return False
 
-
-def len_domen(string):
-    string1 = re.search(r'(?<=@)', string)
-    print(len(string1.group(1)))
-
-# matching('alskd')
-# matching('09@gmail.com')
-# matching('09..@@gmail.com')
-len_domen('09..@@gmail.com')
+email = EmailValidator().get_random_email()
+print(email)
+print(EmailValidator().check_email(email))
