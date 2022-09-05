@@ -1,13 +1,22 @@
 class Vector:
     def __init__(self, *args):
         self.coords = list(args)
-    def __add__(self, other):
-        if len(self.coords) == len(other.coords):
-            return Vector(*[self.coords[i] + other.coords[i] for i in range(len(self.coords))])
+    def __len_validate(self, other):
+        if not len(self.coords) == len(other.coords):
+            raise TypeError('Длины списков должны быть равными')
+    def __make_vector(self, *coords):
+        try:
+            return self.__class__(*coords)
+        except ValueError:
+            return Vector(*coords)
 
+    def __add__(self, other):
+        self.__len_validate(other)
+        return self.__make_vector(*[i + j for i, j in zip(self.coords, other.coords)])
     def __sub__(self, other):
-        if len(self.coords) == len(other.coords):
-            return Vector(*[self.coords[i] - other.coords[i] for i in range(len(self.coords))])
+        self.__len_validate(other)
+        return self.__make_vector(*[i - j for i, j in zip(self.coords, other.coords)])
+
     def get_coords(self):
         return tuple(self.coords)
 
@@ -19,18 +28,7 @@ class VectorInt(Vector):
         for i in list(args):
             if not isinstance(i, int):
                 raise ValueError('координаты должны быть целыми числами')
-    def __add__(self, other):
-        new = [self.coords[i] + other.coords[i] for i in range(len(self.coords))]
-        if all(list(map(lambda x: isinstance(x, int), new))):
-            return VectorInt(*new)
-        else:
-            return Vector(*new)
-    def __sub__(self, other):
-        new = [self.coords[i] - other.coords[i] for i in range(len(self.coords))]
-        if all(list(map(lambda x: isinstance(x, int), new))):
-            return VectorInt(*new)
-        else:
-            return Vector(*new)
+
 
 
 list1 = VectorInt(1, 2, 3)
